@@ -26,6 +26,7 @@ create table dishes
 create table users
 (
     id         INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+    name varchar(255) not null,
     email      varchar(255)                      not null,
     CONSTRAINT email_idx UNIQUE (email),
     enabled    boolean             default true  not null,

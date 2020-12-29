@@ -1,6 +1,7 @@
 package ru.fsw.revo.domain.dao;
 
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import ru.fsw.revo.domain.model.Vote;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +31,8 @@ public class JpaVoteRepository implements VoteRepository {
         } else if (vote.getUser().getId() == null) {
             return null;
         }
-        return em.merge(vote);
+        Vote merged = em.merge(vote);
+        return merged;
     }
 
     @Override
@@ -48,8 +51,14 @@ public class JpaVoteRepository implements VoteRepository {
 
     @Override
     public Vote get(long id, long userId) {
-        Vote vote = em.find(Vote.class, id);
-        return vote != null && vote.getUser().getId() == userId ? vote : null;
+                Query query = em.createNamedQuery(Vote.GET)
+                .setParameter("id", id)
+                .setParameter("userId", userId);
+                Vote vote = (Vote) DataAccessUtils.singleResult(query.getResultList());
+                if (vote ==null) {
+                    return null;
+                }
+                return vote;
     }
 
     @Override
@@ -59,8 +68,4 @@ public class JpaVoteRepository implements VoteRepository {
                 .getResultList();
     }
 
-    @Override
-    public List<Vote> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, long userId) {
-        return null;
-    }
 }

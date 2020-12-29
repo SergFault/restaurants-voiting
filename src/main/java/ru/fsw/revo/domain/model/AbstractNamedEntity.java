@@ -16,7 +16,15 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     protected String name;
 
     protected AbstractNamedEntity() {
+
     }
+
+    protected AbstractNamedEntity(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
     @Override
     public String toString() {
         return super.toString() + '(' + name + ')';

@@ -17,7 +17,14 @@ public class Restaurant extends AbstractNamedEntity{
     @CollectionTable(name = "dishes", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)})
     @MapKeyColumn(name = "dish_name")
     @Column(name = "price", nullable = false)
-    @Fetch(FetchMode.JOIN)
     private Map<String, Integer> menu = new HashMap<>();
 
+    public Restaurant(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Restaurant() {
+
+    }
 }

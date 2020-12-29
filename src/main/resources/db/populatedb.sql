@@ -8,7 +8,7 @@ DELETE
 FROM users;
 DELETE
 FROM votes;
-ALTER SEQUENCE global_seq RESTART WITH 100036;
+ALTER SEQUENCE global_seq RESTART WITH 10036;
 
 INSERT INTO restaurants (id ,name)
 values (10020,'Гавана'),
@@ -34,11 +34,11 @@ VALUES (10000,10020, '10000', 'Беляш'),
        (10014,10023, '30500', 'Шницель'),
        (10015,10023, '13500', 'Антрекот');
 
-INSERT INTO users (id, email, enabled, password, registered)
-VALUES (10016,'frank@mail.com', true, 12, '2020-11-11 10:00:00'),
-       (10017,'eugene@mail.com', true, 23, '2020-11-05 20:00:00'),
-       (10018,'dmitry@gmail.com', true, 34, '2020-11-04 09:30:00'),
-       (10019,'hill@gmail.com', true, 45, '2020-10-28 15:22:00');
+INSERT INTO users (id, name, email, enabled, password, registered)
+VALUES (10016, 'frank' ,'frank@mail.com', true, 12, '2020-11-11 10:00:00'),
+       (10017, 'eugene','eugene@mail.com', true, 23, '2020-11-05 20:00:00'),
+       (10018,'dmitry','dmitry@gmail.com', true, 34, '2020-11-04 09:30:00'),
+       (10019,'hill','hill@gmail.com', true, 45, '2020-10-28 15:22:00');
 
 INSERT INTO user_roles (user_id, role)
 VALUES (10016, 'USER'),

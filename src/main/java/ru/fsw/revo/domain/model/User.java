@@ -1,6 +1,7 @@
 package ru.fsw.revo.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
 import ru.fsw.revo.util.DateTimeUtil;
@@ -11,13 +12,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "users")
-public class User extends AbstractBaseEntity {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class User extends AbstractNamedEntity {
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
@@ -46,6 +49,19 @@ public class User extends AbstractBaseEntity {
     @BatchSize(size = 200)
     private Set<Role> roles;
 
+    public User(Long id, String name, String email, String password, boolean enabled, LocalDateTime registered, Set<Role> roles) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+        this.registered = registered;
+        setRoles(roles);
+    }
+    public User(User u) {
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(),  u.getRegistered(), u.getRoles());
+    }
 
+    public User() {
 
+    }
 }
