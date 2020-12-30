@@ -21,17 +21,15 @@ import java.time.LocalDateTime;
        @NamedQuery(name = Vote.ALL_SORTED, query = "SELECT DISTINCT v FROM Vote v LEFT JOIN FETCH v.restaurant r LEFT JOIN FETCH r.menu m WHERE v.user.id=:userId  ORDER BY v.date DESC"),
         @NamedQuery(name = Vote.DELETE, query = "DELETE FROM Vote v WHERE v.id=:id AND v.user.id=:userId"),
         @NamedQuery(name = Vote.GET, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE v.id=:id AND v.user.id=:userId "),
-//        @NamedQuery(name = Vote.GET_BETWEEN, query = """
-//                    SELECT v FROM Vote v
-//                    WHERE v.user.id=:userId AND v.date >= :startDateTime AND v.date < :endDateTime ORDER BY v.date DESC
-//                """)
+        @NamedQuery(name = Vote.ALL_FOR_REST, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE r.id=:rId"),
 })
-public class Vote extends AbstractBaseEntity implements HasId {
+public class Vote extends AbstractBaseEntity {
 
     public static final String GET = "Vote.get";
     public static final String ALL_SORTED = "Vote.getAll";
     public static final String DELETE = "Vote.delete";
     public static final String GET_BETWEEN = "Vote.getBetween";
+    public static final String ALL_FOR_REST = "Vote.getForRestaurant";
 
     @Column(name = "rating", nullable = false)
     @NotNull
@@ -76,11 +74,4 @@ public class Vote extends AbstractBaseEntity implements HasId {
         this.date = date;
         this.user = user;
     }
-
-    @Override
-    public Long id() {
-        return 0L;
-    }
-
-
 }

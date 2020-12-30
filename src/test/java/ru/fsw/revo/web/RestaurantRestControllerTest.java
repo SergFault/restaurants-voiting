@@ -1,5 +1,6 @@
 package ru.fsw.revo.web;
 
+import org.assertj.core.api.Assertions;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.fsw.revo.domain.model.Restaurant;
 import ru.fsw.revo.domain.model.Vote;
+import ru.fsw.revo.domain.to.RestaurantTo;
+import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.service.VoteService;
 import ru.fsw.revo.utils.exception.NotFoundException;
 import ru.fsw.revo.web.json.JsonUtil;
@@ -24,11 +27,13 @@ import ru.fsw.revo.web.json.JsonUtil;
 import javax.annotation.PostConstruct;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.fsw.revo.RestaurantsTestData.*;
 import static ru.fsw.revo.UserTestData.USER1_ID;
 import static ru.fsw.revo.VoteTestData.*;
 
@@ -38,16 +43,16 @@ import static ru.fsw.revo.VoteTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @Transactional
-public class VoteRestControllerTest {
+public class RestaurantRestControllerTest {
 
-    private static final String REST_URL = VoteRestController.REST_URL + "/";
+    private static final String REST_URL = RestaurantRestController.REST_URL + "/";
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     @Autowired
     public Environment env;
 
     @Autowired
-    protected VoteService service;
+    protected RestaurantService service;
 
     static {
         CHARACTER_ENCODING_FILTER.setEncoding("UTF-8");
@@ -73,42 +78,13 @@ public class VoteRestControllerTest {
     }
 
     @Test
-    void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + VOTE1_ID)
+    void checkRestaurant() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(VOTE_MATCHER.contentJson(vote1));
-    }
+        .andExpect(RESTAURANT_TO_MATCHER.contentJson(rest1To));
 
-    @Test
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + VOTE1_ID))
-                .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(VOTE1_ID, USER1_ID));
-    }
-
-    @Test
-    void update() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(getUpdated())))
-                .andExpect(status().isNoContent());
-
-        Vote vote = service.get(VOTE1_ID, USER1_ID);
-        vote.setRestaurant((Restaurant) Hibernate.unproxy(vote.getRestaurant()));
-        VOTE_MATCHER.assertMatch(vote, getUpdated());
-    }
-
-    @Test
-    void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(VOTE_MATCHER.contentJson(
-                        all_votes.stream()
-                                .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate())).collect(Collectors.toList())
-                ));
     }
 }

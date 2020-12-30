@@ -13,7 +13,6 @@ import static ru.fsw.revo.domain.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteTestData {
     public static final TestMatcher<Vote> VOTE_MATCHER = TestMatcher.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant.menu");
-    public static final TestMatcher<Vote> VOTE_MATCHER_NO = TestMatcher.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
 
     public static final long VOTE_NOT_FOUND_ID = 99999;
     public static final long VOTE_NOT_OWN_ID = 10028;
@@ -29,7 +28,6 @@ public class VoteTestData {
     public static Vote getNew() {
         return new Vote(null, 4, rest1, of(2020, Month.SEPTEMBER, 20, 10, 0)) ;
     }
-
     public static Vote getUpdated() {
         return new Vote(VOTE1_ID, 10, rest1, of(2020, Month.SEPTEMBER, 20, 10, 0)) ;
     }

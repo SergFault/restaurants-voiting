@@ -16,15 +16,12 @@ import java.util.List;
 import static ru.fsw.revo.utils.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value ="/rest/voting", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController {
-
     public final static String REST_URL = "/rest/voting";
-    private final VoteService service;
 
-    public VoteRestController(VoteService service) {
-        this.service = service;
-    }
+    @Autowired
+    private VoteService service;
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

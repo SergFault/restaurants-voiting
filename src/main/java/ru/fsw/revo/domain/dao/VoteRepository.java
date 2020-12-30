@@ -16,4 +16,7 @@ public interface VoteRepository {
 
     // ORDERED dateTime desc
     List<Vote> getAll(long userId);
+
+    //get votes for particular restaurant
+    List<Vote> getAllForRestaurant(long rId);
 }

@@ -68,4 +68,11 @@ public class JpaVoteRepository implements VoteRepository {
                 .getResultList();
     }
 
+    @Override
+    public List<Vote> getAllForRestaurant(long rId) {
+        return em.createNamedQuery(Vote.ALL_FOR_REST, Vote.class)
+                .setParameter("rId", rId)
+                .getResultList();
+    }
+
 }

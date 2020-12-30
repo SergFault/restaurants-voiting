@@ -2,12 +2,13 @@ package ru.fsw.revo.domain.model;
 
 import lombok.Data;
 import org.hibernate.Hibernate;
+import ru.fsw.revo.utils.HasId;
 
 import javax.persistence.*;
 
 @Data
 @MappedSuperclass
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 10000;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")

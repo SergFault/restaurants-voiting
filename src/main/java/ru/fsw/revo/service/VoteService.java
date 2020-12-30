@@ -24,6 +24,10 @@ public class VoteService {
         return repository.getAll(userId);
     }
 
+    public List<Vote> getAllForRestaurant(long rId) {
+        return repository.getAllForRestaurant(rId);
+    }
+
     public void delete(long id, long userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
