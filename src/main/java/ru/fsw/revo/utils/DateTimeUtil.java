@@ -1,4 +1,4 @@
-package ru.fsw.revo.util;
+package ru.fsw.revo.utils;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;

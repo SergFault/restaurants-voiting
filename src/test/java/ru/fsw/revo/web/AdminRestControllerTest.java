@@ -23,13 +23,12 @@ import ru.fsw.revo.web.json.JsonUtil;
 
 import javax.annotation.PostConstruct;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.fsw.revo.RestaurantsTestData.*;
-import static ru.fsw.revo.RestaurantsTestData.rest1_updated;
+import static ru.fsw.revo.UserTestData.*;
 
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
@@ -77,7 +76,7 @@ public class AdminRestControllerTest {
     @Sql(scripts = "classpath:db/populateDB.sql")
     void createNewRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(getNew())))
                 .andExpect(status().isOk())
@@ -92,8 +91,8 @@ public class AdminRestControllerTest {
 
     @Test
     void updateRestaurant() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL+REST1_ID)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
+        perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(rest1_updated)))
                 .andExpect(status().isNoContent());
@@ -105,8 +104,8 @@ public class AdminRestControllerTest {
 
     @Test
     void updateMenu() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL+REST1_ID+"/menu")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
+        perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID + "/menu")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(rest1_updated_menu)))
                 .andExpect(status().isNoContent());

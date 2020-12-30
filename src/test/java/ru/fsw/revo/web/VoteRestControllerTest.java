@@ -29,7 +29,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.fsw.revo.UserTestData.USER1_ID;
+import static ru.fsw.revo.UserTestData.*;
+import static ru.fsw.revo.UserTestData.admin;
 import static ru.fsw.revo.VoteTestData.*;
 
 @SpringJUnitWebConfig(locations = {
@@ -75,7 +76,7 @@ public class VoteRestControllerTest {
     @Test
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + VOTE1_ID)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password")))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -84,25 +85,28 @@ public class VoteRestControllerTest {
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + VOTE1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + VOTE1_ID)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(VOTE1_ID, USER1_ID));
+        assertThrows(NotFoundException.class, () -> service.get(VOTE1_ID, USER_ID));
     }
 
     @Test
     void update() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword()))
                 .content(JsonUtil.writeValue(getUpdated())))
                 .andExpect(status().isNoContent());
 
-        Vote vote = service.get(VOTE1_ID, USER1_ID);
+        Vote vote = service.get(VOTE1_ID, USER_ID);
         vote.setRestaurant((Restaurant) Hibernate.unproxy(vote.getRestaurant()));
         VOTE_MATCHER.assertMatch(vote, getUpdated());
     }
 
     @Test
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

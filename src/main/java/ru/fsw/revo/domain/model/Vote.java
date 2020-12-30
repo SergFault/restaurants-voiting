@@ -1,14 +1,9 @@
 package ru.fsw.revo.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.validator.constraints.Range;
-import ru.fsw.revo.util.DateTimeUtil;
-import ru.fsw.revo.utils.HasId;
+import ru.fsw.revo.utils.DateTimeUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -1,12 +1,14 @@
 package ru.fsw.revo.domain.to;
 
+import ru.fsw.revo.utils.HasId;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class UserTo implements Serializable {
-    protected Integer id;
+public class UserTo implements Serializable, HasId {
+    protected Long id;
 
     private static final long serialVersionUID = 1L;
 
@@ -23,18 +25,18 @@ public class UserTo implements Serializable {
     @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
     private String password;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public UserTo() {
     }
 
-    public UserTo(Integer id, String name, String email, String password) {
+    public UserTo(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

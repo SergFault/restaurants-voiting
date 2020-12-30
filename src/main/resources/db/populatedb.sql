@@ -35,14 +35,15 @@ VALUES (10000,10020, '10000', 'Беляш'),
        (10015,10023, '13500', 'Антрекот');
 
 INSERT INTO users (id, name, email, enabled, password, registered)
-VALUES (10016, 'frank' ,'frank@mail.com', true, 12, '2020-11-11 10:00:00'),
-       (10017, 'eugene','eugene@mail.com', true, 23, '2020-11-05 20:00:00'),
-       (10018,'dmitry','dmitry@gmail.com', true, 34, '2020-11-04 09:30:00'),
-       (10019,'hill','hill@gmail.com', true, 45, '2020-10-28 15:22:00');
+VALUES (10016, 'frank' ,'frank@mail.com', true, '{noop}password', '2020-11-11 10:00:00'),
+       (10017, 'eugene','eugene@mail.com', true, '{noop}password', '2020-11-05 20:00:00'),
+       (10018,'dmitry','dmitry@gmail.com', true, '{noop}password', '2020-11-04 09:30:00'),
+       (10019,'hill','hill@gmail.com', true, '{noop}password', '2020-10-28 15:22:00');
 
 INSERT INTO user_roles (user_id, role)
 VALUES (10016, 'USER'),
        (10017, 'USER'),
+       (10017, 'ADMIN'),
        (10018, 'USER');
 
 INSERT INTO votes (id, dateTime, rating, rest_id, user_id)

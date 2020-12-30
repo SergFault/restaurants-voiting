@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
-import ru.fsw.revo.util.DateTimeUtil;
+import ru.fsw.revo.utils.DateTimeUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,15 +12,24 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
+import java.util.EnumSet;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "users")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NamedQueries({
+        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
+        @NamedQuery(name = User.BY_EMAIL, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
+        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u ORDER BY u.name, u.email"),
+})
 public class User extends AbstractNamedEntity {
+
+    public static final String DELETE = "User.delete";
+    public static final String BY_EMAIL = "User.getByEmail";
+    public static final String ALL_SORTED = "User.getAllSorted";
+
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
@@ -49,19 +58,38 @@ public class User extends AbstractNamedEntity {
     @BatchSize(size = 200)
     private Set<Role> roles;
 
-    public User(Long id, String name, String email, String password, boolean enabled, LocalDateTime registered, Set<Role> roles) {
+    public User(Long id, String name, String email, String password, Set<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
-        this.enabled = enabled;
-        this.registered = registered;
-        setRoles(roles);
+        this.enabled = true;
+        this.registered = LocalDateTime.now();
+        this.roles = roles;
     }
-    public User(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(),  u.getRegistered(), u.getRoles());
+
+    public User(Long id, String name, String email, String password, LocalDateTime registered, Role role, Role... roles) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.enabled = true;
+        this.registered = registered;
+        this.roles = EnumSet.of(role, roles);
+    }
+
+    public User(Long id, String name, String email, String password, LocalDateTime registered, Role role) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.enabled = true;
+        this.registered = registered;
+        this.roles = EnumSet.of(role);
     }
 
     public User() {
-
     }
+
+    public User(Long id, String name, String email, String password, Role role) {
+        this(id, name, email, password, LocalDateTime.now(), role);
+    }
+
 }

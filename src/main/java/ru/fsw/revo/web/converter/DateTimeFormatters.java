@@ -6,10 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 
-import static ru.fsw.revo.util.DateTimeUtil.*;
+import static ru.fsw.revo.utils.DateTimeUtil.*;
 
 
 public class DateTimeFormatters {

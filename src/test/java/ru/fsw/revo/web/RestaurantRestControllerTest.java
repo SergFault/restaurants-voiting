@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.fsw.revo.RestaurantsTestData.*;
-import static ru.fsw.revo.UserTestData.USER1_ID;
+import static ru.fsw.revo.UserTestData.admin;
 import static ru.fsw.revo.VoteTestData.*;
 
 @SpringJUnitWebConfig(locations = {
@@ -80,7 +80,7 @@ public class RestaurantRestControllerTest {
     @Test
     void checkRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password")))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -1,9 +1,19 @@
 package ru.fsw.revo;
 
+import ru.fsw.revo.domain.model.Role;
+import ru.fsw.revo.domain.model.User;
+
+import java.time.LocalDateTime;
+
+import static ru.fsw.revo.domain.model.AbstractBaseEntity.START_SEQ;
+
 public class UserTestData {
 
-    public static final long USER1_ID = 10016;
-    public static final long ADMIN_ID = 10017;
+    public static final long USER_ID = START_SEQ+16;
+    public static final long ADMIN_ID = START_SEQ + 17;
+
+    public static final User user = new User(USER_ID, "frank", "frank@mail.com", "password", LocalDateTime.of(2020, 11, 11, 10,00,00), Role.USER);
+    public static final User admin = new User(ADMIN_ID, "eugene", "eugene@mail.com", "password", LocalDateTime.of(2020, 11, 05, 20,00), Role.ADMIN, Role.USER);
 
 
 
