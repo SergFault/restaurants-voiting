@@ -29,8 +29,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.fsw.revo.UserTestData.*;
-import static ru.fsw.revo.UserTestData.admin;
+import static ru.fsw.revo.UserTestData.USER_ID;
+import static ru.fsw.revo.UserTestData.user;
 import static ru.fsw.revo.VoteTestData.*;
 
 @SpringJUnitWebConfig(locations = {
@@ -76,7 +76,7 @@ public class VoteRestControllerTest {
     @Test
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + VOTE1_ID)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -86,7 +86,7 @@ public class VoteRestControllerTest {
     @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + VOTE1_ID)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> service.get(VOTE1_ID, USER_ID));
     }
@@ -94,7 +94,7 @@ public class VoteRestControllerTest {
     @Test
     void update() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword()))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
                 .content(JsonUtil.writeValue(getUpdated())))
                 .andExpect(status().isNoContent());
 
@@ -106,7 +106,7 @@ public class VoteRestControllerTest {
     @Test
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail() , user.getPassword())))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -114,5 +114,26 @@ public class VoteRestControllerTest {
                         all_votes.stream()
                                 .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate())).collect(Collectors.toList())
                 ));
+    }
+
+    @Test
+    void getUnauth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + VOTE1_ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + VOTE_NOT_FOUND_ID)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + ADMIN_VOTE_ID)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
+                .andExpect(status().isUnprocessableEntity());
     }
 }
