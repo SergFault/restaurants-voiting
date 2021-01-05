@@ -18,7 +18,7 @@ import static ru.fsw.revo.utils.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController {
-    public final static String REST_URL = "/rest/voting";
+    public final static String REST_URL = "/rest/votes";
 
     @Autowired
     private VoteService service;

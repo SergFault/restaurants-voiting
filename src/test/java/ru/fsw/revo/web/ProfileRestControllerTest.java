@@ -1,12 +1,11 @@
 package ru.fsw.revo.web;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -16,10 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import ru.fsw.revo.domain.to.RestaurantTo;
 import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.service.VoteService;
-import ru.fsw.revo.web.json.JsonUtil;
 
 import javax.annotation.PostConstruct;
 
@@ -27,10 +24,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.fsw.revo.RestaurantsTestData.*;
-import static ru.fsw.revo.RestaurantsTestData.rest1To_with_updated_menu;
 import static ru.fsw.revo.UserTestData.*;
-import static ru.fsw.revo.VoteTestData.*;
 
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
@@ -38,6 +32,7 @@ import static ru.fsw.revo.VoteTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @Transactional
+@ActiveProfiles("prod")
 public class ProfileRestControllerTest {
 
     private static final String REST_URL = ProfileRestController.REST_URL + "/";

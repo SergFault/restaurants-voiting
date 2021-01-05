@@ -8,11 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.fsw.revo.domain.model.User;
 import ru.fsw.revo.domain.model.Vote;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.fsw.revo.utils.DateTimeUtil.elevenCheck;
 
 @Repository
 @Transactional(readOnly = true)
@@ -26,13 +29,16 @@ public class JpaVoteRepository implements VoteRepository {
     public Vote save(Vote vote, long userId) {
         vote.setUser(em.find(User.class, userId));
         if (vote.isNew()) {
+            vote.setDate(LocalDateTime.now());
             em.persist(vote);
             return vote;
         } else if (vote.getUser().getId() == null) {
             return null;
         }
-        Vote merged = em.merge(vote);
-        return merged;
+        Vote voteToBeChecked = em.find(Vote.class, vote.getId());
+        LocalDateTime voteDateTime = voteToBeChecked.getDate();
+        elevenCheck(voteDateTime);
+        return em.merge(vote);
     }
 
     @Override
@@ -43,22 +49,22 @@ public class JpaVoteRepository implements VoteRepository {
                     rollbackFor = Throwable.class
             )
     public boolean delete(long id, long userId) {
-            return em.createNamedQuery(Vote.DELETE)
-                    .setParameter("id", id)
-                    .setParameter("userId", userId)
-                    .executeUpdate() != 0;
+        return em.createNamedQuery(Vote.DELETE)
+                .setParameter("id", id)
+                .setParameter("userId", userId)
+                .executeUpdate() != 0;
     }
 
     @Override
     public Vote get(long id, long userId) {
-                Query query = em.createNamedQuery(Vote.GET)
+        Query query = em.createNamedQuery(Vote.GET)
                 .setParameter("id", id)
                 .setParameter("userId", userId);
-                Vote vote = (Vote) DataAccessUtils.singleResult(query.getResultList());
-                if (vote ==null) {
-                    return null;
-                }
-                return vote;
+        Vote vote = (Vote) DataAccessUtils.singleResult(query.getResultList());
+        if (vote == null) {
+            return null;
+        }
+        return vote;
     }
 
     @Override
@@ -74,5 +80,4 @@ public class JpaVoteRepository implements VoteRepository {
                 .setParameter("rId", rId)
                 .getResultList();
     }
-
 }

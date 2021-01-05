@@ -9,16 +9,17 @@ import java.util.TreeMap;
 
 @Entity
 @Data
-@Table(name = "restaurants")
 @NamedQueries({
         @NamedQuery(name = Restaurant.GET, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE r.id=:rId")
 
 })
+@Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_name_unique_idx")})
 public class Restaurant extends AbstractNamedEntity {
     public static final String GET = "Restaurant.get";
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "dishes", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)})
+    @CollectionTable(name = "dishes", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)},
+            uniqueConstraints = {@UniqueConstraint(columnNames = { "rest_id", "dish_name"}, name = "dish_unique_idx")})
     @MapKeyColumn(name = "dish_name")
     @Column(name = "price", nullable = false)
     @BatchSize(size = 5)

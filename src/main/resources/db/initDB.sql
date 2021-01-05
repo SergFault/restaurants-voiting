@@ -12,6 +12,7 @@ create table restaurants
     id   INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
     name varchar(255) not null
 );
+CREATE UNIQUE INDEX restaurants_name_unique_idx ON restaurants (name);
 
 create table dishes
 (
@@ -21,6 +22,7 @@ create table dishes
     dish_name varchar(255) not null,
     FOREIGN KEY (rest_id ) REFERENCES restaurants (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX dish_unique_idx ON dishes (rest_id, dish_name);
 
 
 create table users
@@ -33,6 +35,7 @@ create table users
     password   varchar(255)                      not null,
     registered timestamp           default now() not null
 );
+CREATE UNIQUE INDEX users_unique_email_idx ON users (email);
 
 create table user_roles
 (
@@ -41,6 +44,7 @@ create table user_roles
     CONSTRAINT user_roles_idx UNIQUE (user_id, role),
     FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX user_roles_unique_idx ON user_roles (user_id, role);
 
 create table votes
 (
@@ -51,5 +55,5 @@ create table votes
     user_id      bigint                            not null,
     FOREIGN KEY (rest_id) REFERENCES restaurants (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-
 );
+CREATE UNIQUE INDEX votes_per_date_rest_idx ON votes (user_id, rest_id, date_trunc('day',dateTime));

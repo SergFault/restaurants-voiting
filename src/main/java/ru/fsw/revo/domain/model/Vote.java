@@ -2,6 +2,8 @@ package ru.fsw.revo.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 import ru.fsw.revo.utils.DateTimeUtil;
 
@@ -11,13 +13,20 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "votes")
+@Table(name = "votes") //uniqueConstraints cannot be truncated to date tier, have to rely on DBinit script
 @NamedQueries({
        @NamedQuery(name = Vote.ALL_SORTED, query = "SELECT DISTINCT v FROM Vote v LEFT JOIN FETCH v.restaurant r LEFT JOIN FETCH r.menu m WHERE v.user.id=:userId  ORDER BY v.date DESC"),
         @NamedQuery(name = Vote.DELETE, query = "DELETE FROM Vote v WHERE v.id=:id AND v.user.id=:userId"),
         @NamedQuery(name = Vote.GET, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE v.id=:id AND v.user.id=:userId "),
         @NamedQuery(name = Vote.ALL_FOR_REST, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE r.id=:rId"),
 })
+@NamedEntityGraph(
+        name = "vote_with_user_rest",
+        attributeNodes = {
+                @NamedAttributeNode("user"),
+                @NamedAttributeNode("restaurant")
+        }
+)
 public class Vote extends AbstractBaseEntity {
 
     public static final String GET = "Vote.get";
@@ -39,6 +48,7 @@ public class Vote extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

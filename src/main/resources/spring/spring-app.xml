@@ -10,6 +10,9 @@
         </bean>
     -->
 
+
     <import resource="spring-security.xml"/>
+    <import resource="spring-clock.xml"/>
     <context:component-scan base-package="ru.fsw.**.service"/>
+    <context:component-scan base-package="ru.fsw.**.utils"/>
 </beans>

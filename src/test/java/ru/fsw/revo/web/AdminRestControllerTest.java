@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +37,7 @@ import static ru.fsw.revo.UserTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @Transactional
+@ActiveProfiles("prod")
 public class AdminRestControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + "/";
@@ -103,6 +105,7 @@ public class AdminRestControllerTest {
     }
 
     @Test
+    @Sql(scripts = "classpath:db/populateDB.sql")
     void updateMenu() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID + "/menu")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))

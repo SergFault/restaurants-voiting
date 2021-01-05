@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -43,6 +44,7 @@ import static ru.fsw.revo.VoteTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @Transactional
+@ActiveProfiles("prod")
 public class RestaurantRestControllerTest {
 
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";

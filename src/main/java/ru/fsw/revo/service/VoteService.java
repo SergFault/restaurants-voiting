@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.fsw.revo.domain.dao.VoteRepository;
 import ru.fsw.revo.domain.model.Vote;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.fsw.revo.utils.ValidationUtil.*;
@@ -33,12 +34,12 @@ public class VoteService {
     }
 
     public Vote create(Vote vote, long userId) {
+        checkNew(vote);
         return repository.save(vote, userId);
     }
 
     public void update(Vote vote, long id, long userId) {
         assureIdConsistent(vote, id);
-        Vote voteSaved = repository.save(vote, userId);
-        checkNotFoundWithId(voteSaved, id);
+        checkNotFoundWithId(repository.save(vote, userId),id);
     }
 }
