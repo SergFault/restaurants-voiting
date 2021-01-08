@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -80,6 +81,7 @@ public class RestaurantRestControllerTest {
     }
 
     @Test
+    @Sql(scripts = "classpath:db/populateDB.sql")
     void checkRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword())))

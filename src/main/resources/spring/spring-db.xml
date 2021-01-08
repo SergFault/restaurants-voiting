@@ -16,7 +16,7 @@
     <context:property-placeholder location="classpath:db/db.properties" system-properties-mode="OVERRIDE"/>
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-          p:driverClassName="org.postgresql.Driver"
+          p:driverClassName="${database.driver}"
           p:url="${database.url}"
           p:username="${database.username}"
           p:password="${database.password}"/>

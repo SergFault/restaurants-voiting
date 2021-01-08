@@ -92,6 +92,7 @@ public class AdminRestControllerTest {
     }
 
     @Test
+    @Sql(scripts = "classpath:db/populateDB.sql")
     void updateRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
