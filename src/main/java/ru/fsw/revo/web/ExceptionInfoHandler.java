@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.fsw.revo.utils.ValidationUtil;
-import ru.fsw.revo.utils.exception.ErrorInfo;
-import ru.fsw.revo.utils.exception.ErrorType;
-import ru.fsw.revo.utils.exception.IllegalRequestDataException;
-import ru.fsw.revo.utils.exception.NotFoundException;
+import ru.fsw.revo.utils.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,7 +38,8 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
+            HttpMessageNotReadableException.class, VotePerDayException.class, VoteTimeModConstraint.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return getErrorInfo(req, e, VALIDATION_ERROR);
     }

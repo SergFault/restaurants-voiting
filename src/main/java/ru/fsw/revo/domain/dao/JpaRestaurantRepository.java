@@ -8,7 +8,6 @@ import ru.fsw.revo.domain.model.Restaurant;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Map;
 
 @Repository
 @Transactional(readOnly = true)

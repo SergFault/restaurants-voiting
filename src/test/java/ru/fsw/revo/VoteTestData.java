@@ -13,6 +13,7 @@ import static ru.fsw.revo.domain.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteTestData {
     public static final TestMatcher<Vote> VOTE_MATCHER = TestMatcher.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant.menu");
+    public static final TestMatcher<Vote> VOTE_CREATED_MATCHER = TestMatcher.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant.menu", "id", "date");
 
     public static final long VOTE_NOT_FOUND_ID = 99999;
     public static final long ADMIN_VOTE_ID = 10028;

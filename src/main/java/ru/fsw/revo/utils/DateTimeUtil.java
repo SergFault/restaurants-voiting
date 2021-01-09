@@ -1,11 +1,12 @@
 package ru.fsw.revo.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import ru.fsw.revo.utils.exception.Vote11AMConstraint;
+import ru.fsw.revo.utils.exception.VoteTimeModConstraint;
+import ru.fsw.revo.utils.exception.VotePerDayException;
 
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +16,6 @@ import java.time.temporal.ChronoUnit;
 
 @Component
 public class DateTimeUtil {
-
     private static Clock clock;
 
     public static final int HOUR_RESTRICTED = 11;
@@ -27,11 +27,17 @@ public class DateTimeUtil {
     private static final LocalDateTime MIN_DATE = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MAX_DATE = LocalDateTime.of(3000, 1, 1, 0, 0);
 
-    public static void elevenCheck(LocalDateTime dateOfVote){
-        LocalDateTime now  = LocalDateTime.now(clock);
+    public static void restrictionCheck(LocalDateTime dateOfVote){
         dateOfVote.toLocalDate().atStartOfDay();
         if (!isBetweenHalfOpen(LocalDateTime.now(clock), dateOfVote.toLocalDate().atStartOfDay(), dateOfVote.toLocalDate().atTime(HOUR_RESTRICTED,MINUTES_RESTRICTED) )){
-            throw new Vote11AMConstraint("Vote can`t be changed after 11 A:M");
+            throw new VoteTimeModConstraint("Vote can`t be changed after 11 A:M");
+        }
+    }
+
+    public static void sameDayCheck(LocalDateTime dateOfVote){
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        if (fmt.format(dateOfVote).equals(LocalDateTime.now())){
+            throw new VotePerDayException("Can`t vote twice per day for");
         }
     }
 
@@ -39,20 +45,16 @@ public class DateTimeUtil {
         return (start == null || value.compareTo(start) >= 0) && (end == null || value.compareTo(end) < 0);
     }
 
+    public static LocalDateTime atStartOfDayOrMin(LocalDateTime localDatetime) {
+        return localDatetime != null ? localDatetime.toLocalDate().atStartOfDay() : MIN_DATE;
+    }
+
+    public static LocalDateTime atStartOfNextDayOrMax(LocalDateTime localDateTime) {
+        return localDateTime != null ? localDateTime.plus(1, ChronoUnit.DAYS).toLocalDate().atStartOfDay() : MAX_DATE;
+    }
+
     private DateTimeUtil(Clock clock) {
         this.clock = clock;
-    }
-
-    public static LocalDateTime atStartOfDayOrMin(LocalDate localDate) {
-        return localDate != null ? localDate.atStartOfDay() : MIN_DATE;
-    }
-
-    public static LocalDateTime atStartOfNextDayOrMax(LocalDate localDate) {
-        return localDate != null ? localDate.plus(1, ChronoUnit.DAYS).atStartOfDay() : MAX_DATE;
-    }
-
-    public static String toString(LocalDateTime ldt) {
-        return ldt == null ? "" : ldt.format(DATE_TIME_FORMATTER);
     }
 
     public static @Nullable

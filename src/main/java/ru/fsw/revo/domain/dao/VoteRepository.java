@@ -2,7 +2,6 @@ package ru.fsw.revo.domain.dao;
 
 import ru.fsw.revo.domain.model.Vote;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface VoteRepository {

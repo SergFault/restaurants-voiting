@@ -90,5 +90,4 @@ public class User extends AbstractNamedEntity {
     public User(Long id, String name, String email, String password, Role role) {
         this(id, name, email, password, LocalDateTime.now(), role);
     }
-
 }

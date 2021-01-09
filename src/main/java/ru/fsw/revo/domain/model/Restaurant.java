@@ -19,7 +19,7 @@ public class Restaurant extends AbstractNamedEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "dishes", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)},
-            uniqueConstraints = {@UniqueConstraint(columnNames = { "rest_id", "dish_name"}, name = "dish_unique_idx")})
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"rest_id", "dish_name"}, name = "dish_unique_idx")})
     @MapKeyColumn(name = "dish_name")
     @Column(name = "price", nullable = false)
     @BatchSize(size = 5)
@@ -43,5 +43,4 @@ public class Restaurant extends AbstractNamedEntity {
         this.name = name;
         this.menu = menu;
     }
-
 }

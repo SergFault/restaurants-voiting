@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -38,6 +39,8 @@ import static ru.fsw.revo.UserTestData.*;
 })
 @Transactional
 @ActiveProfiles("prod")
+//https://stackoverflow.com/questions/34617152/how-to-re-create-database-before-each-test-in-spring
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AdminRestControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + "/";
@@ -75,7 +78,6 @@ public class AdminRestControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:db/populateDB.sql")
     void createNewRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
@@ -92,7 +94,6 @@ public class AdminRestControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:db/populateDB.sql")
     void updateRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))
@@ -106,7 +107,6 @@ public class AdminRestControllerTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:db/populateDB.sql")
     void updateMenu() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID + "/menu")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword()))

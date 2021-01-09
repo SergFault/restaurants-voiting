@@ -106,6 +106,28 @@ public class VoteRestControllerTest {
     }
 
     @Test
+    void create() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
+                .content(JsonUtil.writeValue(getNew())))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(VOTE_CREATED_MATCHER.contentJson(getNew()));
+    }
+
+    @Test
+    void createDouble() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
+                .content(JsonUtil.writeValue(getNew())))
+                .andExpect(status().isOk());
+        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
+                .content(JsonUtil.writeValue(getNew())))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
