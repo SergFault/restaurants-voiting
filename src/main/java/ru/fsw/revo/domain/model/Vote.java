@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
         }
 )
 @Cacheable
-@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Vote extends AbstractBaseEntity {
 
     public static final String GET = "Vote.get";
