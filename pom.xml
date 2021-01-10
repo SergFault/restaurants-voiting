@@ -33,7 +33,7 @@
     <javax-el.version>3.0.1-b12</javax-el.version>
 
     <!--Cache-->
-    <ehcache.version>3.9.0</ehcache.version>
+    <ehcache.version>5.4.22.Final</ehcache.version>
 
 </properties>
 
@@ -87,11 +87,6 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jcache</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
 
         <!--http://hibernate.org/validator/documentation/getting-started/#unified-expression-language-el-->
         <dependency>
@@ -103,14 +98,8 @@
 
         <!-- Cache -->
         <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
             <version>${ehcache.version}</version>
         </dependency>
 

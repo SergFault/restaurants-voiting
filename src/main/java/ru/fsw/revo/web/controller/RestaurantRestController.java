@@ -1,4 +1,4 @@
-package ru.fsw.revo.web;
+package ru.fsw.revo.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -7,7 +7,7 @@ import ru.fsw.revo.domain.to.RestaurantTo;
 import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.service.VoteService;
 
-import static ru.fsw.revo.web.RestaurantRestController.REST_URL;
+import static ru.fsw.revo.web.controller.RestaurantRestController.REST_URL;
 
 @RestController
 @RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)

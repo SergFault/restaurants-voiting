@@ -1,4 +1,4 @@
-package ru.fsw.revo.web;
+package ru.fsw.revo.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import static ru.fsw.revo.utils.ValidationUtil.assureIdConsistent;
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileRestController{
-    static final String REST_URL = "/rest/profile";
+    public static final String REST_URL = "/rest/profile";
 
     @Autowired
     private UserService service;

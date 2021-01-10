@@ -2,6 +2,7 @@ package ru.fsw.revo.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
         @NamedQuery(name = Vote.GET, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE v.id=:id AND v.user.id=:userId "),
         @NamedQuery(name = Vote.ALL_FOR_REST, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE r.id=:rId"),
         @NamedQuery(name = Vote.GET_FOR_REST_BETWEEN_DATES, query = "SELECT v FROM Vote v WHERE v.user.id=:userId AND v.restaurant.id=:rId AND v.date>= :startDate AND v.date< :endDate")
-        //AND v.date>= :startDate AND v.date< :endDate
 })
 @NamedEntityGraph(
         name = "vote_with_user_rest",
@@ -29,6 +29,8 @@ import java.time.LocalDateTime;
                 @NamedAttributeNode("restaurant")
         }
 )
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Vote extends AbstractBaseEntity {
 
     public static final String GET = "Vote.get";

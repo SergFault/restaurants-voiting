@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.service.VoteService;
+import ru.fsw.revo.web.controller.ProfileRestController;
 
 import javax.annotation.PostConstruct;
 

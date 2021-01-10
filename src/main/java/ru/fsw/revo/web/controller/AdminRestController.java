@@ -1,4 +1,4 @@
-package ru.fsw.revo.web;
+package ru.fsw.revo.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import ru.fsw.revo.service.RestaurantService;
 
 import java.util.Map;
 
-import static ru.fsw.revo.web.AdminRestController.REST_URL;
+import static ru.fsw.revo.web.controller.AdminRestController.REST_URL;
 
 @RestController
 @RequestMapping(REST_URL)

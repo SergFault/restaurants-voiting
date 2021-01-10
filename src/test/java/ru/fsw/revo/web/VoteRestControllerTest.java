@@ -20,6 +20,7 @@ import ru.fsw.revo.domain.model.Restaurant;
 import ru.fsw.revo.domain.model.Vote;
 import ru.fsw.revo.service.VoteService;
 import ru.fsw.revo.utils.exception.NotFoundException;
+import ru.fsw.revo.web.controller.VoteRestController;
 import ru.fsw.revo.web.json.JsonUtil;
 
 import javax.annotation.PostConstruct;
