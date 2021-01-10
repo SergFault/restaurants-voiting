@@ -2,6 +2,7 @@ package ru.fsw.revo.domain.model;
 
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.TreeMap;
 
 })
 @Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_name_unique_idx")})
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Restaurant extends AbstractNamedEntity {
     public static final String GET = "Restaurant.get";
 

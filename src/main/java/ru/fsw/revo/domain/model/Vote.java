@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "votes") //uniqueConstraints cannot be truncated to date tier, have to rely on DBinit script
+@Table(name = "votes") //uniqueConstraints cannot be truncated to date tier
 @NamedQueries({
-        @NamedQuery(name = Vote.ALL_SORTED, query = "SELECT DISTINCT v FROM Vote v LEFT JOIN FETCH v.restaurant r LEFT JOIN FETCH r.menu m WHERE v.user.id=:userId  ORDER BY v.date DESC"),
+        @NamedQuery(name = Vote.ALL_SORTED, query = "SELECT DISTINCT v FROM Vote v LEFT JOIN FETCH v.restaurant r LEFT JOIN FETCH r.menu m WHERE v.user.id=:userId  ORDER BY v.date DESC",hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}),
         @NamedQuery(name = Vote.DELETE, query = "DELETE FROM Vote v WHERE v.id=:id AND v.user.id=:userId"),
-        @NamedQuery(name = Vote.GET, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE v.id=:id AND v.user.id=:userId "),
-        @NamedQuery(name = Vote.ALL_FOR_REST, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE r.id=:rId"),
-        @NamedQuery(name = Vote.GET_FOR_REST_BETWEEN_DATES, query = "SELECT v FROM Vote v WHERE v.user.id=:userId AND v.restaurant.id=:rId AND v.date>= :startDate AND v.date< :endDate")
+        @NamedQuery(name = Vote.GET, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE v.id=:id AND v.user.id=:userId ", hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}),
+        @NamedQuery(name = Vote.ALL_FOR_REST, query = "SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant r WHERE r.id=:rId", hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")}),
+        @NamedQuery(name = Vote.GET_FOR_REST_BETWEEN_DATES, query = "SELECT v FROM Vote v WHERE v.user.id=:userId AND v.restaurant.id=:rId AND v.date>= :startDate AND v.date< :endDate", hints = {@QueryHint(name = "org.hibernate.cacheable", value = "true")})
 })
 @NamedEntityGraph(
         name = "vote_with_user_rest",
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
         }
 )
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_ONLY)
 public class Vote extends AbstractBaseEntity {
 
     public static final String GET = "Vote.get";

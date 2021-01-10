@@ -1,5 +1,6 @@
 package ru.fsw.revo.web;
 
+import net.sf.ehcache.CacheManager;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import ru.fsw.revo.web.json.JsonUtil;
 import javax.annotation.PostConstruct;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -160,5 +163,17 @@ public class VoteRestControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL + ADMIN_VOTE_ID)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void cache() {
+        Vote vote = getNew();
+        vote = service.create(vote, USER_ID);
+        service.get(vote.id(), user.id());
+        service.get(vote.id(), user.id());
+        service.get(vote.id(), user.id());
+        int size = CacheManager.ALL_CACHE_MANAGERS.get(0)
+                .getCache("default-query-results-region").getSize();
+        assertThat(size, greaterThan(0));
     }
 }

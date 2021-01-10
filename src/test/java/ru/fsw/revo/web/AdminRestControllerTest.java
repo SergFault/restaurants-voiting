@@ -119,6 +119,4 @@ public class AdminRestControllerTest {
                 .usingRecursiveComparison()
                 .isEqualTo(rest1To_with_updated_menu);
     }
-
-
 }
