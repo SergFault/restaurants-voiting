@@ -60,7 +60,34 @@ curl --location --request PUT 'http://localhost:8080/rest/admin/restaurants/1004
 }
 }'
 
-# A relative path for admin types of operations: "/rest/votes"
+# A relative path for restaurants controller: "/rest/restaurants"
+
+## Check restaurants with their current menu:
+
+curl --location --request GET 'http://localhost:8080/rest/restaurants' \
+--header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
+
+Response Headers
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 15 Jan 2021 16:54:51 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+Response Body
+
+[{"id":10020,"name":"Гавана","menu":{"Винегрет":7000,"Беляш":10000,"Бигос":12000,"Бисквит":5000}}, 
+
+{"id":10022,"name":"Гараж","menu":{"Стью":12500,"Тарэ":35000,"Токана":6000,"Слатур":11500}},
+
+{"id":10023,"name":"Пляж","menu":{"Шашлык":33000,"Шницель":30500,"Антрекот":13500,"Стейк":45000}},
+
+{"id":10021,"name":"Триполи","menu":{"Брезаола":20000,"Сочник":31000,"Лагман":20000,"Банановый торт":15000}}]
 
 ## Check restaurant with its rank:
 

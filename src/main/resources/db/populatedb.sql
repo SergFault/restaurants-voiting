@@ -1,22 +1,22 @@
 DELETE
 FROM user_roles;
 DELETE
-FROM dishes;
+FROM dish;
 DELETE
-FROM restaurants;
+FROM restaurant;
 DELETE
 FROM users;
 DELETE
-FROM votes;
+FROM vote;
 ALTER SEQUENCE global_seq RESTART WITH 10036;
 
-INSERT INTO restaurants (id ,name)
+INSERT INTO restaurant (id ,name)
 values (10020,'Гавана'),
        (10021,'Триполи'),
        (10022,'Гараж'),
        (10023,'Пляж');
 
-INSERT INTO dishes (id, rest_id, price, dish_name)
+INSERT INTO dish (id, rest_id, price, dish_name)
 VALUES (10000,10020, '10000', 'Беляш'),
        (10001,10020, '12000', 'Бигос'),
        (10002,10020, '5000', 'Бисквит'),
@@ -46,7 +46,7 @@ VALUES (10016, 'USER'),
        (10017, 'ADMIN'),
        (10018, 'USER');
 
-INSERT INTO votes (id, date_of, rating, rest_id, user_id)
+INSERT INTO vote (id, date_of, rating, rest_id, user_id)
 values (10024,'2020-11-12', 3, '10020', '10016'),
        (10025,'2020-11-13', 6, '10021', '10016'),
        (10026,'2020-11-14', 4, '10022', '10016'),

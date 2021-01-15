@@ -11,17 +11,19 @@ import java.util.TreeMap;
 @Entity
 @Data
 @NamedQueries({
-        @NamedQuery(name = Restaurant.GET, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE r.id=:rId")
+        @NamedQuery(name = Restaurant.GET, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE r.id=:rId"),
+        @NamedQuery(name = Restaurant.GET_ALL, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m ORDER BY name")
 
 })
-@Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_name_unique_idx")})
+@Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_name_unique_idx")})
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Restaurant extends AbstractNamedEntity {
     public static final String GET = "Restaurant.get";
+    public static final String GET_ALL = "Get.all";
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "dishes", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)},
+    @CollectionTable(name = "dish", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"rest_id", "dish_name"}, name = "dish_unique_idx")})
     @MapKeyColumn(name = "dish_name")
     @Column(name = "price", nullable = false)

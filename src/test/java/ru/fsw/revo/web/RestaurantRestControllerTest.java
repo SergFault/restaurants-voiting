@@ -16,10 +16,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import ru.fsw.revo.domain.model.Restaurant;
 import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.web.controller.RestaurantRestController;
 
 import javax.annotation.PostConstruct;
+
+import java.util.List;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -78,6 +81,17 @@ public class RestaurantRestControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(RESTAURANT_TO_MATCHER.contentJson(rest1To));
+
+    }
+
+    @Test
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail() , admin.getPassword())))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(getRestaurants()));
 
     }
 }

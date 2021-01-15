@@ -3,9 +3,12 @@ package ru.fsw.revo.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.fsw.revo.domain.model.Restaurant;
 import ru.fsw.revo.domain.to.RestaurantTo;
 import ru.fsw.revo.service.RestaurantService;
 import ru.fsw.revo.service.VoteService;
+
+import java.util.List;
 
 import static ru.fsw.revo.web.controller.RestaurantRestController.REST_URL;
 
@@ -26,6 +29,11 @@ public class RestaurantRestController {
     @GetMapping("/{rId}")
     public RestaurantTo checkRestaurant(@PathVariable long rId) {
         return resService.getRestaurantWithRating(rId);
+    }
+
+    @GetMapping
+    public List<Restaurant> restaurantsWithMenu() {
+        return resService.getRestaurants();
     }
 
 

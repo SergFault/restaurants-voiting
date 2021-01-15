@@ -61,4 +61,8 @@ public class RestaurantService {
     public RestaurantTo getRestaurantWithRating(long rId) {
         return setRating(new RestaurantTo(repository.get(rId)));
     }
+
+    public List<Restaurant> getRestaurants() {
+        return this.repository.getAll();
+    }
 }
