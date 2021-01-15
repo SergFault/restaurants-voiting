@@ -35,6 +35,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.fsw.revo.RestaurantsTestData.rest1;
+import static ru.fsw.revo.RestaurantsTestData.rest2;
 import static ru.fsw.revo.UserTestData.USER_ID;
 import static ru.fsw.revo.UserTestData.user;
 import static ru.fsw.revo.VoteTestData.*;
@@ -45,7 +47,8 @@ import static ru.fsw.revo.VoteTestData.*;
         "classpath:spring/spring-db.xml"
 })
 @ActiveProfiles("test")
-@Transactional
+//@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class VoteRestControllerTest {
 
     private static final String REST_URL = VoteRestController.REST_URL + "/";
@@ -100,6 +103,7 @@ public class VoteRestControllerTest {
 
     @Test
     @DirtiesContext
+    @Transactional
     void update() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
@@ -113,9 +117,8 @@ public class VoteRestControllerTest {
 
     @Test
     void create() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
-                .content(JsonUtil.writeValue(getNew())))
+        perform(MockMvcRequestBuilders.post(REST_URL+"/"+rest1.getId()+"/"+RANK_4)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(VOTE_CREATED_MATCHER.contentJson(getNew()));
@@ -123,14 +126,13 @@ public class VoteRestControllerTest {
 
     @Test
     void createDouble() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
-                .content(JsonUtil.writeValue(getNew())))
+        perform(MockMvcRequestBuilders.post(REST_URL+"/"+rest2.getId()+"/"+RANK_4)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
                 .andExpect(status().isOk());
-        perform(MockMvcRequestBuilders.post(REST_URL).contentType(MediaType.APPLICATION_JSON)
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
-                .content(JsonUtil.writeValue(getNew())))
-                .andExpect(status().isUnprocessableEntity());
+        perform(MockMvcRequestBuilders.post(REST_URL+"/"+rest1.getId()+"/"+RANK_4)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
+                .andExpect(status().isConflict());
+
     }
 
     @Test

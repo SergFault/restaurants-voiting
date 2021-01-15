@@ -60,6 +60,10 @@ public class User extends AbstractNamedEntity {
     @BatchSize(size = 200)
     private Set<Role> roles;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(Long id, String name, String email, String password, Set<Role> roles) {
         super(id, name);
         this.email = email;

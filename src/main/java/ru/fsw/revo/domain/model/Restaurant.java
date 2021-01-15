@@ -33,6 +33,9 @@ public class Restaurant extends AbstractNamedEntity {
         this.name = name;
     }
 
+    public Restaurant(long id) {
+        this.id = id;
+    }
     public Restaurant() {
     }
 

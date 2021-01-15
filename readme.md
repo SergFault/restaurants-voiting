@@ -14,9 +14,9 @@ Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, 
 Users can leave their vote for each restaurant (with value of 1 to 10.). They can change their voce same day but only before 11 a.m.
 Users can check particular restaurant and it`s average rank by rest request.
 
-#A relative path for admin types of operations: "/rest/admin"
+# A relative path for admin types of operations: "/rest/admin"
 
-##Update menu for particular restaurant:
+## Update menu for particular restaurant:
 
 curl --location --request PUT 'http://localhost:8080/rest/admin/restaurant/10020/menu' \
 --header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
@@ -30,9 +30,9 @@ curl --location --request PUT 'http://localhost:8080/rest/admin/restaurant/10020
 
 10020 - id of restaurant to change menu in.
 
-##Create a new restaurant:
+## Create a new restaurant:
 
-curl --location --request POST 'http://localhost:8080/rest/admin/restaurant' \
+curl --location --request POST 'http://localhost:8080/rest/admin/restaurants' \
 --header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -45,9 +45,9 @@ curl --location --request POST 'http://localhost:8080/rest/admin/restaurant' \
 }
 }'
 
-##Update restaurant that already exists:
+## Update restaurant that already exists:
 
-curl --location --request PUT 'http://localhost:8080/rest/admin/restaurant/10048' \
+curl --location --request PUT 'http://localhost:8080/rest/admin/restaurants/10048' \
 --header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -60,36 +60,50 @@ curl --location --request PUT 'http://localhost:8080/rest/admin/restaurant/10048
 }
 }'
 
-#A relative path for admin types of operations: "/rest/votes"
+# A relative path for admin types of operations: "/rest/votes"
 
-##Check restaurant with its rank:
+## Check restaurant with its rank:
 
-curl --location --request GET 'http://localhost:8080/rest/restaurant/10020' \
+curl --location --request GET 'http://localhost:8080/rest/restaurants/10020' \
 --header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
 
-## Get all your votes as authorized user
+## Get all your votes as an authorized user
 
 curl --location --request GET 'http://localhost:8080/rest/votes/' \
 --header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
 
-##Leave vote for a restaurant:
+## Leave vote for a restaurant:
 
-curl --location --request POST 'http://localhost:8080/rest/votes/' \
---header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ=' \
---header 'Content-Type: application/json' \
---data-raw '    {
-"rating": 10,
-"restaurant": {
-"id": 10023,
-"name": "Пляж"
+curl --location --request POST 'http://localhost:8080/rest/votes/10020/4' \
+--header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
+
+Explanation:
+http://localhost:8080/rest/votes/{restaurant id}/{restaurant rank}
+
+Response Headers
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 15 Jan 2021 16:32:03 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+Response Body
+{
+"id":10036,"rating":4,
+"date":"2021-01-15 16:32",
+"restaurant":{"id":10020}
 }
-}'
 
-##Delete your voce by id as authorized user:
+## Delete your voce by id as authorized user:
 curl --location --request DELETE 'http://localhost:8080/rest/votes/10053' \
 --header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
 
-##Update your voce by id as authorized user (before 11AM same day):
+## Update your voce by id as authorized user (before 11AM same day):
 curl --location --request PUT 'http://localhost:8080/rest/votes/10027' \
 --header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ=' \
 --header 'Content-Type: application/json' \
@@ -102,9 +116,9 @@ curl --location --request PUT 'http://localhost:8080/rest/votes/10027' \
 }
 }'
 
-#A registration example
+# A registration example
 
-##Request
+## Request
 curl --location --request POST 'http://localhost:8080/rest/profile/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -113,7 +127,7 @@ curl --location --request POST 'http://localhost:8080/rest/profile/register' \
 "password": "password"
 }'
 
-##Response
+## Response
 HTTP/1.1 201 Created  
 Location: http://localhost:8080/rest/profile  
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate  

@@ -14,7 +14,7 @@ import static ru.fsw.revo.web.controller.AdminRestController.REST_URL;
 @RestController
 @RequestMapping(REST_URL)
 public class AdminRestController {
-    public final static String REST_URL = "/rest/admin/restaurant";
+    public final static String REST_URL = "/rest/admin/restaurants";
 
     @Autowired
     private final RestaurantService service;

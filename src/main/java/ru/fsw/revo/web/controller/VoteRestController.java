@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.fsw.revo.domain.model.Restaurant;
+import ru.fsw.revo.domain.model.User;
 import ru.fsw.revo.domain.model.Vote;
 import ru.fsw.revo.service.VoteService;
 import ru.fsw.revo.utils.SecurityUtil;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,10 +29,16 @@ public class VoteRestController {
         service.update(vote, id , userId);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Vote create(@RequestBody Vote vote) {
+    @PostMapping("/{restaurantId}/{rank}")
+    public Vote create(@PathVariable long restaurantId, @PathVariable int rank) {
         long userId = SecurityUtil.authUserId();
-        return service.create(vote, userId);
+        Vote vote = new Vote(rank, new Date());
+        vote.setRestaurant(new Restaurant(restaurantId));
+        Vote returned = service.create(vote, userId);
+        //cleanup response
+        returned.setUser(null);
+        returned.getRestaurant().setMenu(null);
+        return returned;
     }
 
     @GetMapping("/{id}")

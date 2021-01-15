@@ -4,9 +4,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.fsw.revo.utils.exception.VoteTimeModConstraint;
-import ru.fsw.revo.utils.exception.VotePerDayException;
 
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,17 +25,11 @@ public class DateTimeUtil {
     private static final LocalDateTime MIN_DATE = LocalDateTime.of(1, 1, 1, 0, 0);
     private static final LocalDateTime MAX_DATE = LocalDateTime.of(3000, 1, 1, 0, 0);
 
-    public static void restrictionCheck(LocalDateTime dateOfVote){
+    public static void restrictionTimeCheck() {
+        LocalDateTime dateOfVote = LocalDateTime.now(clock);
         dateOfVote.toLocalDate().atStartOfDay();
-        if (!isBetweenHalfOpen(LocalDateTime.now(clock), dateOfVote.toLocalDate().atStartOfDay(), dateOfVote.toLocalDate().atTime(HOUR_RESTRICTED,MINUTES_RESTRICTED) )){
+        if (!isBetweenHalfOpen(dateOfVote, dateOfVote.toLocalDate().atStartOfDay(), dateOfVote.toLocalDate().atTime(HOUR_RESTRICTED, MINUTES_RESTRICTED))) {
             throw new VoteTimeModConstraint("Vote can`t be changed after 11 A:M");
-        }
-    }
-
-    public static void sameDayCheck(LocalDateTime dateOfVote){
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        if (fmt.format(dateOfVote).equals(LocalDateTime.now())){
-            throw new VotePerDayException("Can`t vote twice per day for");
         }
     }
 

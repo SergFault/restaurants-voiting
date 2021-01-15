@@ -12,7 +12,7 @@ import static ru.fsw.revo.web.controller.RestaurantRestController.REST_URL;
 @RestController
 @RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantRestController {
-    public final static String  REST_URL = "/rest/restaurant";
+    public final static String  REST_URL = "/rest/restaurants";
 
     @Autowired
     private final VoteService voteService;
