@@ -1,8 +1,10 @@
 package ru.fsw.revo.domain.to;
 
 import lombok.Data;
+import ru.fsw.revo.domain.model.MenuItem;
 import ru.fsw.revo.domain.model.Restaurant;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -12,7 +14,7 @@ public class RestaurantTo {
     public String name;
     public double rating;
     public int votes;
-    private Map<String, Integer> menu;
+    private List<MenuItem> menu;
 
     public RestaurantTo(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -23,7 +25,7 @@ public class RestaurantTo {
     public RestaurantTo() {
     }
 
-    public RestaurantTo(Restaurant restaurant, double rating, int votes, Map<String, Integer> menu) {
+    public RestaurantTo(Restaurant restaurant, double rating, int votes, List<MenuItem> menu) {
         this.id = restaurant.getId();
         this.name = restaurant.getName();
         this.rating = rating;

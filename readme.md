@@ -3,7 +3,7 @@ REST "restaurant-voting" Project
 Simple REST service with extensive domain model with authentication and authorization (Spring Security).
 Persistence into DB implemented with JPA Hibernate.
 
-Tech stack: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), 
+A tech stack: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), 
 Java 8 Stream and Time API, storage -> HSQLDB.
 
 Application implements restaurants ranking functionality.
@@ -12,62 +12,108 @@ Application supports 2 types of users: admin and regular users.
 
 Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a dish name and price).
 Users can leave their vote for each restaurant (with value of 1 to 10.). They can change their voce same day but only before 11 a.m.
-Users can check particular restaurant and it`s average rank by rest request.
+Users can check a particular restaurant and it`s average rank by rest request.
 
 # A relative path for admin types of operations: "/rest/admin"
 
 ## Update menu for particular restaurant:
 
-curl --location --request PUT 'http://localhost:8080/rest/admin/restaurant/10020/menu' \
---header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
---header 'Content-Type: application/json' \
---data-raw '    {
-"Винегрет": 70400,
-"Кабаби": 135000,
-"Бигос": 120400,
-"Бисквит": 50600
-}'
+curl --location --request PUT 'http://localhost:8080/rest/admin/restaurants/10020/menu' \  
+--header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \  
+--header 'Content-Type: application/json' \  
+--data-raw '[  
+{  
+"name": "Беляш2",  
+"price": 10000,  
+"date": "2019-11-11T21:00:00.000+00:00"  
+},  
+{  
+"name": "Бигос3",  
+"price": 12000,  
+"date": "2019-11-11T21:00:00.000+00:00"  
+},  
+{  
+"name": "Бисквит4",  
+"price": 5000,  
+"date": "2019-11-11T21:00:00.000+00:00"  
+},  
+{  
+"name": "Винегрет53",  
+"price": 7000,  
+"date": "2019-11-11T21:00:00.000+00:00"  
+}  
+]  
+'  
 
 10020 - id of restaurant to change menu in.
 
 ## Create a new restaurant:
 
-curl --location --request POST 'http://localhost:8080/rest/admin/restaurants' \
---header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
---header 'Content-Type: application/json' \
---data-raw '{
-"name": "StarDucks",
-"menu": {
-"Latte": 22500,
-"Espresso": 15000,
-"Цикорий": 13200,
-"Паса эль Карбонара": 50000
-}
-}'
+curl --location --request POST 'http://localhost:8080/rest/admin/restaurants' \  
+--header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \  
+--header 'Content-Type: application/json' \  
+--data-raw ' {  
+"name": "Кураж",  
+"menu": [  
+{  
+"name": "Рис",  
+"price": 45000  
+},  
+{  
+"name": "Шашлык",  
+"price": 33000  
+},  
+{  
+"name": "Шницель",  
+"price": 30500  
+},  
+{  
+"name": "Антрекот",  
+"price": 13500  
+}  
+]  
+}'  
 
 ## Update restaurant that already exists:
 
-curl --location --request PUT 'http://localhost:8080/rest/admin/restaurants/10048' \
---header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \
---header 'Content-Type: application/json' \
---data-raw '{
-"name": "StarDucks-coffe555",
-"menu": {
-"Latte": 22500,
-"Espresso": 15000,
-"Цикорий": 13200,
-"Паса эль Карбонара": 40000
-}
-}'
+curl --location --request PUT 'http://localhost:8080/rest/admin/restaurants/10020' \  
+--header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk' \  
+--header 'Content-Type: application/json' \  
+--data-raw ' {  
+"name": "Новый ресторан",  
+"menu": [  
+{  
+"name": "Картофель",  
+"price": 45000  
+},  
+{  
+"name": "Солянка",  
+"price": 33000  
+}  
+]  
+}'  
+
+## Response Headers
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Date: Fri, 15 Jan 2021 18:19:26 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+
 
 # A relative path for restaurants controller: "/rest/restaurants"
 
 ## Check restaurants with their current menu:
 
 curl --location --request GET 'http://localhost:8080/rest/restaurants' \
---header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
+--header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk'
 
-Response Headers
+## Response Headers
+
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
@@ -89,10 +135,9 @@ Response Body
 
 {"id":10021,"name":"Триполи","menu":{"Брезаола":20000,"Сочник":31000,"Лагман":20000,"Банановый торт":15000}}]
 
-## Check restaurant with its rank:
-
+## Check restaurant and last available menu with average rank
 curl --location --request GET 'http://localhost:8080/rest/restaurants/10020' \
---header 'Authorization: Basic ZnJhbmtAbWFpbC5jb206cGFzc3dvcmQ='
+--header 'Authorization: Basic ZXVnZW5lQG1haWwuY29tOnBhc3N3b3Jk'
 
 ## Get all your votes as an authorized user
 

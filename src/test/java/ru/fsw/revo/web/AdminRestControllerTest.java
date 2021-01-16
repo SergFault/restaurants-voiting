@@ -89,6 +89,7 @@ public class AdminRestControllerTest {
         RestaurantTo restaurantWithRating = resService.getRestaurantWithRating(createdTo.getId());
         Assertions.assertThat(restaurantWithRating)
                 .usingRecursiveComparison()
+                .ignoringFields("menu.date", "menu.restaurant")
                 .isEqualTo(createdTo);
 
     }
@@ -103,6 +104,7 @@ public class AdminRestControllerTest {
         RestaurantTo restaurantWithRating = resService.getRestaurantWithRating(rest1.id());
         Assertions.assertThat(restaurantWithRating)
                 .usingRecursiveComparison()
+                .ignoringFields("menu.date", "menu.restaurant", "menu.id")
                 .isEqualTo(rest1_updatedTo);
     }
 
@@ -117,6 +119,7 @@ public class AdminRestControllerTest {
         RestaurantTo restaurantWithRating = resService.getRestaurantWithRating(rest1.id());
         Assertions.assertThat(restaurantWithRating)
                 .usingRecursiveComparison()
+                .ignoringFields("menu.date", "menu.id", "menu.restaurant")
                 .isEqualTo(rest1To_with_updated_menu);
     }
 }

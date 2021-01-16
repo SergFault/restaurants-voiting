@@ -1,18 +1,19 @@
 package ru.fsw.revo.domain.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NamedQueries({
-        @NamedQuery(name = Restaurant.GET, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE r.id=:rId"),
-        @NamedQuery(name = Restaurant.GET_ALL, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m ORDER BY name")
+        @NamedQuery(name = Restaurant.GET, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE r.id=:rId AND m.date=(SELECT max(m.date) FROM r.menu m where m.restaurant.id=:rId)"),
+        @NamedQuery(name = Restaurant.GET_ALL, query = "SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menu m WHERE m.date=(SELECT max(m.date) FROM r.menu m) ORDER BY r.name ")
 
 })
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_name_unique_idx")})
@@ -22,13 +23,10 @@ public class Restaurant extends AbstractNamedEntity {
     public static final String GET = "Restaurant.get";
     public static final String GET_ALL = "Get.all";
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "dish", joinColumns = {@JoinColumn(name = "rest_id", referencedColumnName = "id", nullable = false)},
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"rest_id", "dish_name"}, name = "dish_unique_idx")})
-    @MapKeyColumn(name = "dish_name")
-    @Column(name = "price", nullable = false)
-    @BatchSize(size = 5)
-    private Map<String, Integer> menu = new TreeMap<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @BatchSize(size = 20)
+    @OrderBy(value = "name")
+    private List<MenuItem> menu;
 
     public Restaurant(long id, String name) {
         this.id = id;
@@ -38,15 +36,16 @@ public class Restaurant extends AbstractNamedEntity {
     public Restaurant(long id) {
         this.id = id;
     }
+
     public Restaurant() {
     }
 
-    public Restaurant(String name, Map<String, Integer> menu) {
+    public Restaurant(String name, List<MenuItem> menu) {
         this.name = name;
         this.menu = menu;
     }
 
-    public Restaurant(long id, String name, Map<String, Integer> menu) {
+    public Restaurant(long id, String name, List<MenuItem> menu) {
         this.id = id;
         this.name = name;
         this.menu = menu;
